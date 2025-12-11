@@ -1,18 +1,18 @@
 package com.playground.playground.service;
 
 
-import com.playground.playground.model.entity.Playground;
+import com.playground.playground.dto.PlaygroundDto;
 
 import java.util.List;
 
 public interface PlaygroundService {
 
-    List<Playground> listPlayground();
-    Playground getPlaygrounds(Long id);
+    List<PlaygroundDto> listPlayground();
 
-    Playground createPlayground(Playground playground);
+    PlaygroundDto getPlaygrounds(Long id);
+    PlaygroundDto createPlayground(PlaygroundDto playground);
 
-    Playground updatePlayground(Long id, Playground playground);
+    PlaygroundDto updatePlayground(Long id, PlaygroundDto playground);
 
     void deletePlayground(Long id);
 }

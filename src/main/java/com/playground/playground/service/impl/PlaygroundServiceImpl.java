@@ -1,5 +1,7 @@
 package com.playground.playground.service.impl;
 
+import com.playground.playground.dto.PlaygroundDto;
+import com.playground.playground.mapper.PlaygroundMapper;
 import com.playground.playground.model.entity.Playground;
 import com.playground.playground.repository.PlaygroundRepository;
 import com.playground.playground.service.PlaygroundService;
@@ -14,26 +16,36 @@ public class PlaygroundServiceImpl implements PlaygroundService {
 
     private final PlaygroundRepository repository;
 
+    private final PlaygroundMapper mapper;
+
     @Override
-    public List<Playground> listPlayground() {
-        return repository.findAll();
+    public List<PlaygroundDto> listPlayground() {
+        List<Playground> playgrounds = repository.findAll();
+        return mapper.toDtos(playgrounds);
     }
 
     @Override
-    public Playground getPlaygrounds(Long id) {
-        return repository.findById(id)
+    public PlaygroundDto getPlaygrounds(Long id) {
+        Playground playground = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Playground not found"));
+        return mapper.toDto(playground);
     }
 
     @Override
-    public Playground createPlayground(Playground playground) {
-        return repository.save(playground);
+    public PlaygroundDto createPlayground(PlaygroundDto playgroundDto) {
+        Playground playground = mapper.toEntity(playgroundDto);
+        playground.setValorationMedia((0.0));
+
+        Playground savedPlayground = repository.save(playground);
+
+        return mapper.toDto(savedPlayground);
     }
 
     @Override
-    public Playground updatePlayground(Long id, Playground playground) {
+    public PlaygroundDto updatePlayground(Long id, PlaygroundDto playground) {
 
-        Playground existPlayground = getPlaygrounds(id);
+        Playground existPlayground = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Playground not found"));
 
         existPlayground.setName(playground.getName());
         existPlayground.setAddress(playground.getAddress());
@@ -42,7 +54,9 @@ public class PlaygroundServiceImpl implements PlaygroundService {
         existPlayground.setDescription(playground.getDescription());
         existPlayground.setPhotos(playground.getPhotos());
 
-        return repository.save(existPlayground);
+        Playground savedPlayground = repository.save(existPlayground);
+
+        return mapper.toDto(savedPlayground);
     }
 
     @Override

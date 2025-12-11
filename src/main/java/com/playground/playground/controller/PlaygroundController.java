@@ -1,6 +1,6 @@
 package com.playground.playground.controller;
 
-import com.playground.playground.model.entity.Playground;
+import com.playground.playground.dto.PlaygroundDto;
 import com.playground.playground.service.PlaygroundService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +15,22 @@ public class PlaygroundController {
     private final PlaygroundService service;
 
     @GetMapping
-    public List<Playground> listPlayground(){
+    public List<PlaygroundDto> listPlayground(){
         return service.listPlayground();
     }
 
     @GetMapping("/{id}")
-    public Playground getPlaygrounds(@PathVariable Long id) {
+    public PlaygroundDto getPlaygrounds(@PathVariable Long id) {
         return service.getPlaygrounds(id);
     }
 
     @PostMapping
-    public Playground createPlayground(@RequestBody Playground playground){
+    public PlaygroundDto createPlayground(@RequestBody PlaygroundDto playground){
         return service.createPlayground(playground);
     }
 
     @PutMapping
-    public Playground updatePlayground(@PathVariable Long id, @RequestBody Playground playground){
+    public PlaygroundDto updatePlayground(@PathVariable Long id, @RequestBody PlaygroundDto playground){
         return service.updatePlayground(id, playground);
     }
 
