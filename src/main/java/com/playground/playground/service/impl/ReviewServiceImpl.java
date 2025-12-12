@@ -50,6 +50,39 @@ public class ReviewServiceImpl implements ReviewService {
         reviewRepository.deleteById(id);
     }
 
+    @Override
+    public ReviewDto updateReview(Long id, ReviewDto reviewDto) {
+        // Buscar la review existente
+        Review existingReview = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+
+        // Actualizar campos
+        existingReview.setUsername(reviewDto.getUsername());
+        existingReview.setScore(reviewDto.getScore());
+        existingReview.setComment(reviewDto.getComment());
+        existingReview.setDate(LocalDateTime.now());
+
+        // Si el playground cambia, actualizar la relación
+        if (reviewDto.getPlaygroundId() != null &&
+                !reviewDto.getPlaygroundId().equals(existingReview.getPlayground().getId())) {
+
+            Playground playground = playgroundRepository.findById(reviewDto.getPlaygroundId())
+                    .orElseThrow(() -> new RuntimeException("Playground not found"));
+
+            existingReview.setPlayground(playground);
+        }
+
+        // Guardar la review actualizada
+        Review updatedReview = reviewRepository.save(existingReview);
+
+        // Actualizar valoración media del playground
+        updateValorationMedia(existingReview.getPlayground());
+
+        // Devolver DTO
+        return reviewMapper.toReviewDto(updatedReview);
+    }
+
+
     private void updateValorationMedia(Playground playground) {
         List<Review> reviews = reviewRepository.findByPlaygroundId(playground.getId());
 

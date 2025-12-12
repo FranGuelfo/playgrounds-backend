@@ -8,19 +8,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/playground")
+@RequestMapping("/api/playgrounds")
 @RequiredArgsConstructor
 public class PlaygroundController {
 
     private final PlaygroundService service;
 
     @GetMapping
-    public List<PlaygroundDto> listPlayground(){
+    public List<PlaygroundDto> listPlaygrounds(){
         return service.listPlayground();
     }
 
     @GetMapping("/{id}")
-    public PlaygroundDto getPlaygrounds(@PathVariable Long id) {
+    public PlaygroundDto getPlayground(@PathVariable Long id) {
         return service.getPlaygrounds(id);
     }
 
@@ -29,7 +29,7 @@ public class PlaygroundController {
         return service.createPlayground(playground);
     }
 
-    @PutMapping
+    @PutMapping("/{id}")
     public PlaygroundDto updatePlayground(@PathVariable Long id, @RequestBody PlaygroundDto playground){
         return service.updatePlayground(id, playground);
     }
@@ -38,4 +38,16 @@ public class PlaygroundController {
     public void deletePlayground(@PathVariable Long id){
         service.deletePlayground(id);
     }
+
+    // Opcional: añadir fotos directamente
+    @PostMapping("/{id}/photos")
+    public PlaygroundDto addPhoto(@PathVariable Long id, @RequestBody String photoUrl){
+        return service.addPhoto(id, photoUrl);
+    }
+
+    @DeleteMapping("/{id}/photos")
+    public PlaygroundDto deletePhoto(@PathVariable Long id, @RequestBody String photoUrl){
+        return service.removePhoto(id, photoUrl);
+    }
 }
+

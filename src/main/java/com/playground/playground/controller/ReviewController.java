@@ -24,6 +24,11 @@ public class ReviewController {
         return reviewService.createReview(reviewDto);
     }
 
+    @PutMapping("/{id}")
+    public ReviewDto updateReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto){
+        return reviewService.updateReview(id, reviewDto);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteReview(@PathVariable Long id) {
         reviewService.deleteReview(id);
