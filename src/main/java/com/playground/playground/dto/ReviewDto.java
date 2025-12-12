@@ -9,7 +9,7 @@ public class ReviewDto {
 
     private Long id;
 
-    private String user;
+    private String username;
 
     private int score;
 

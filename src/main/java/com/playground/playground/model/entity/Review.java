@@ -12,7 +12,7 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String user;
+    private String username;
 
     private int score;
 
@@ -23,5 +23,4 @@ public class Review {
     @ManyToOne
     @JoinColumn(name = "playground_id")
     private Playground playground;
-
 }
