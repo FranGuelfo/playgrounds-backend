@@ -11,10 +11,9 @@ import java.util.List;
 public interface ReviewMapper {
 
     @Mapping(source = "playground.id", target = "playgroundId")
+    @Mapping(source = "user.username", target = "username")
     ReviewDto toReviewDto(Review review);
-
-    @Mapping(source = "playgroundId", target = "playground.id")
-    Review toReviewEntity(ReviewDto reviewDto);
 
     List<ReviewDto> toReviewDtos(List<Review> reviews);
 }
+

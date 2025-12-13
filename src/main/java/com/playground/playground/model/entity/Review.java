@@ -1,5 +1,6 @@
 package com.playground.playground.model.entity;
 
+import com.playground.playground.model.security.UserSecurity;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -8,11 +9,10 @@ import java.time.LocalDateTime;
 @Entity
 @Data
 public class Review {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String username;
 
     private int score;
 
@@ -20,7 +20,11 @@ public class Review {
 
     private LocalDateTime date;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "playground_id")
     private Playground playground;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
+    private UserSecurity user;
 }

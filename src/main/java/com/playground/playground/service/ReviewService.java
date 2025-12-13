@@ -9,5 +9,9 @@ public interface ReviewService {
     List<ReviewDto> listPlaygroundReviews(Long playgroundId);
 
     ReviewDto createReview(ReviewDto reviewDto);
+
     void deleteReview(Long id);
+
+    ReviewDto updateReview(Long id, ReviewDto reviewDto);
+
 }

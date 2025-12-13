@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +31,7 @@ public class PlaygroundServiceImpl implements PlaygroundService {
             photo.setUrl(url);
             photo.setPlayground(playground);
             return photo;
-        }).collect(Collectors.toList());
+        }).toList();
         playground.setPhotos(photos);
 
         Playground saved = repository.save(playground);
@@ -74,7 +73,7 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     @Override
     public List<PlaygroundDto> listPlayground() {
         List<Playground> playgrounds = repository.findAll();
-        return playgrounds.stream().map(this::toDtoWithPhotos).collect(Collectors.toList());
+        return playgrounds.stream().map(this::toDtoWithPhotos).toList();
     }
 
     @Override
@@ -87,8 +86,35 @@ public class PlaygroundServiceImpl implements PlaygroundService {
         dto.setPhotos(
                 playground.getPhotos().stream()
                         .map(PlaygroundPhoto::getUrl)
-                        .collect(Collectors.toList())
-        );
+                        .toList());
         return dto;
+    }
+
+    @Override
+    public PlaygroundDto addPhoto(Long playgroundId, String photoUrl) {
+        Playground playground = repository.findById(playgroundId)
+                .orElseThrow(() -> new RuntimeException("Playground not found"));
+
+        PlaygroundPhoto photo = new PlaygroundPhoto();
+        photo.setUrl(photoUrl);
+        photo.setPlayground(playground);
+
+        playground.getPhotos().add(photo);
+
+        Playground saved = repository.save(playground);
+
+        return toDtoWithPhotos(saved);
+    }
+
+    @Override
+    public PlaygroundDto removePhoto(Long playgroundId, String photoUrl) {
+        Playground playground = repository.findById(playgroundId)
+                .orElseThrow(() -> new RuntimeException("Playground not found"));
+
+        playground.getPhotos().removeIf(photo -> photo.getUrl().equals(photoUrl));
+
+        Playground saved = repository.save(playground);
+
+        return toDtoWithPhotos(saved);
     }
 }
