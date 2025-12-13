@@ -1,9 +1,13 @@
 package com.playground.playground.service.impl;
 
+import com.playground.playground.config.security.SecurityUtils;
 import com.playground.playground.dto.ReviewDto;
+import com.playground.playground.exception.ForbiddenException;
 import com.playground.playground.mapper.ReviewMapper;
+import com.playground.playground.model.Role;
 import com.playground.playground.model.entity.Playground;
 import com.playground.playground.model.entity.Review;
+import com.playground.playground.model.security.UserSecurity;
 import com.playground.playground.repository.PlaygroundRepository;
 import com.playground.playground.repository.ReviewRepository;
 import com.playground.playground.service.ReviewService;
@@ -31,57 +35,71 @@ public class ReviewServiceImpl implements ReviewService {
 
     @Override
     public ReviewDto createReview(ReviewDto reviewDto) {
+
         Playground playground = playgroundRepository.findById(reviewDto.getPlaygroundId())
-                .orElseThrow(() -> new RuntimeException("playground not found"));
+                .orElseThrow(() -> new RuntimeException("Playground not found"));
 
-        Review review = reviewMapper.toReviewEntity(reviewDto);
-        review.setPlayground(playground);
+        UserSecurity user = SecurityUtils.getCurrentUser();
+
+        Review review = new Review();
+        review.setScore(reviewDto.getScore());
+        review.setComment(reviewDto.getComment());
         review.setDate(LocalDateTime.now());
+        review.setPlayground(playground);
+        review.setUser(user);
 
-        Review reviewSaved = reviewRepository.save(review);
+        Review saved = reviewRepository.save(review);
 
         updateValorationMedia(playground);
 
-        return reviewMapper.toReviewDto(reviewSaved);
+        return reviewMapper.toReviewDto(saved);
     }
 
-    @Override
     public void deleteReview(Long id) {
-        reviewRepository.deleteById(id);
+
+        Review review = reviewRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Review not found"));
+
+        UserSecurity currentUser = SecurityUtils.getCurrentUser();
+
+        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
+        boolean isAuthor = review.getUser().getId().equals(currentUser.getId());
+
+        if (!isAuthor && !isAdmin) {
+            throw new ForbiddenException("You can only delete your own reviews");
+        }
+
+        Playground playground = review.getPlayground();
+        reviewRepository.delete(review);
+        updateValorationMedia(playground);
     }
 
     @Override
     public ReviewDto updateReview(Long id, ReviewDto reviewDto) {
-        // Buscar la review existente
-        Review existingReview = reviewRepository.findById(id)
+        Review review = reviewRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
 
-        // Actualizar campos
-        existingReview.setUsername(reviewDto.getUsername());
-        existingReview.setScore(reviewDto.getScore());
-        existingReview.setComment(reviewDto.getComment());
-        existingReview.setDate(LocalDateTime.now());
+        UserSecurity currentUser = SecurityUtils.getCurrentUser();
 
-        // Si el playground cambia, actualizar la relación
-        if (reviewDto.getPlaygroundId() != null &&
-                !reviewDto.getPlaygroundId().equals(existingReview.getPlayground().getId())) {
+        boolean isAdmin = currentUser.getRole() == Role.ADMIN;
+        boolean isAuthor = review.getUser().getId().equals(currentUser.getId());
 
-            Playground playground = playgroundRepository.findById(reviewDto.getPlaygroundId())
-                    .orElseThrow(() -> new RuntimeException("Playground not found"));
-
-            existingReview.setPlayground(playground);
+        if (!isAuthor && !isAdmin) {
+            throw new ForbiddenException("You can only edit your own reviews");
         }
 
-        // Guardar la review actualizada
-        Review updatedReview = reviewRepository.save(existingReview);
+        // Actualizamos campos permitidos
+        review.setComment(reviewDto.getComment());
+        review.setScore(reviewDto.getScore());
+        review.setDate(LocalDateTime.now()); // opcional: actualizar fecha de edición
 
-        // Actualizar valoración media del playground
-        updateValorationMedia(existingReview.getPlayground());
+        Review saved = reviewRepository.save(review);
 
-        // Devolver DTO
-        return reviewMapper.toReviewDto(updatedReview);
+        // Recalcular valoración media si cambió el score
+        updateValorationMedia(review.getPlayground());
+
+        return reviewMapper.toReviewDto(saved);
     }
-
 
     private void updateValorationMedia(Playground playground) {
         List<Review> reviews = reviewRepository.findByPlaygroundId(playground.getId());

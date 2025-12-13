@@ -2,6 +2,7 @@ package com.playground.playground.controller;
 
 import com.playground.playground.dto.ReviewDto;
 import com.playground.playground.service.ReviewService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +21,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ReviewDto createReview(@RequestBody ReviewDto reviewDto) {
+    public ReviewDto createReview(@Valid @RequestBody ReviewDto reviewDto) {
         return reviewService.createReview(reviewDto);
     }
 
