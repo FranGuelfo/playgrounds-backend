@@ -1,13 +1,14 @@
 package com.playground.playground.service.impl;
 
-import com.playground.playground.config.security.SecurityUtils;
+import com.playground.playground.security.SecurityUtils;
 import com.playground.playground.dto.ReviewDto;
 import com.playground.playground.exception.ForbiddenException;
+import com.playground.playground.exception.ReviewNotFoundException;
 import com.playground.playground.mapper.ReviewMapper;
-import com.playground.playground.model.Role;
-import com.playground.playground.model.entity.Playground;
-import com.playground.playground.model.entity.Review;
-import com.playground.playground.model.security.UserSecurity;
+import com.playground.playground.domain.enums.Role;
+import com.playground.playground.domain.entity.Playground;
+import com.playground.playground.domain.entity.Review;
+import com.playground.playground.security.user.UserSecurity;
 import com.playground.playground.repository.PlaygroundRepository;
 import com.playground.playground.repository.ReviewRepository;
 import com.playground.playground.service.ReviewService;
@@ -37,7 +38,7 @@ public class ReviewServiceImpl implements ReviewService {
     public ReviewDto createReview(ReviewDto reviewDto) {
 
         Playground playground = playgroundRepository.findById(reviewDto.getPlaygroundId())
-                .orElseThrow(() -> new RuntimeException("Playground not found"));
+                .orElseThrow(ReviewNotFoundException::new);
 
         UserSecurity user = SecurityUtils.getCurrentUser();
 
@@ -58,7 +59,7 @@ public class ReviewServiceImpl implements ReviewService {
     public void deleteReview(Long id) {
 
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found"));
+                .orElseThrow(ReviewNotFoundException::new);
 
         UserSecurity currentUser = SecurityUtils.getCurrentUser();
 
@@ -77,7 +78,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDto updateReview(Long id, ReviewDto reviewDto) {
         Review review = reviewRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Review not found"));
+                .orElseThrow(ReviewNotFoundException::new);
 
         UserSecurity currentUser = SecurityUtils.getCurrentUser();
 
@@ -91,7 +92,7 @@ public class ReviewServiceImpl implements ReviewService {
         // Actualizamos campos permitidos
         review.setComment(reviewDto.getComment());
         review.setScore(reviewDto.getScore());
-        review.setDate(LocalDateTime.now()); // opcional: actualizar fecha de edición
+        review.setDate(LocalDateTime.now());
 
         Review saved = reviewRepository.save(review);
 

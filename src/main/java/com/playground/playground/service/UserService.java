@@ -1,6 +1,6 @@
-package com.playground.playground.service.security;
+package com.playground.playground.service;
 
-import com.playground.playground.model.security.UserSecurity;
+import com.playground.playground.security.user.UserSecurity;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;

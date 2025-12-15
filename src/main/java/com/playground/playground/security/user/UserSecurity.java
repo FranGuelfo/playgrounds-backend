@@ -1,6 +1,6 @@
-package com.playground.playground.model.security;
+package com.playground.playground.security.user;
 
-import com.playground.playground.model.Role;
+import com.playground.playground.domain.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;

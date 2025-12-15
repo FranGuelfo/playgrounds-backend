@@ -1,6 +1,7 @@
-package com.playground.playground.config.security;
+package com.playground.playground.security.config;
 
-import com.playground.playground.service.security.CustomUserDetailsService;
+import com.playground.playground.security.filter.JwtAutenthicationFilter;
+import com.playground.playground.security.user.CustomUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
