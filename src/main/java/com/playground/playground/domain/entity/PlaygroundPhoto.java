@@ -1,4 +1,4 @@
-package com.playground.playground.model.entity;
+package com.playground.playground.domain.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;

@@ -2,10 +2,10 @@ package com.playground.playground.controller;
 
 import com.playground.playground.dto.security.LoginDto;
 import com.playground.playground.dto.security.RegisterDto;
-import com.playground.playground.model.Role;
-import com.playground.playground.model.security.UserSecurity;
+import com.playground.playground.domain.enums.Role;
+import com.playground.playground.security.user.UserSecurity;
 import com.playground.playground.repository.UserRepository;
-import com.playground.playground.service.security.JwtService;
+import com.playground.playground.security.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

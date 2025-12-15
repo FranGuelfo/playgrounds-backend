@@ -1,6 +1,6 @@
-package com.playground.playground.model.entity;
+package com.playground.playground.domain.entity;
 
-import com.playground.playground.model.security.UserSecurity;
+import com.playground.playground.security.user.UserSecurity;
 import jakarta.persistence.*;
 import lombok.Data;
 

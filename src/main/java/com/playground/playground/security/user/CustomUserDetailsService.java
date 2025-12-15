@@ -1,4 +1,4 @@
-package com.playground.playground.service.security;
+package com.playground.playground.security.user;
 
 import com.playground.playground.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

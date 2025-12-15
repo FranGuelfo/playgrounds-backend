@@ -1,7 +1,7 @@
-package com.playground.playground.config.security;
+package com.playground.playground.security.filter;
 
-import com.playground.playground.service.security.CustomUserDetailsService;
-import com.playground.playground.service.security.JwtService;
+import com.playground.playground.security.user.CustomUserDetailsService;
+import com.playground.playground.security.jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

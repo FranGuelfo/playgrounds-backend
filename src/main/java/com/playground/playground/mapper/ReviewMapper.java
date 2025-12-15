@@ -1,7 +1,7 @@
 package com.playground.playground.mapper;
 
 import com.playground.playground.dto.ReviewDto;
-import com.playground.playground.model.entity.Review;
+import com.playground.playground.domain.entity.Review;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
