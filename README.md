@@ -279,17 +279,6 @@ Playground → Reviews (1:N)
 
 application.properties:
 
-server.port=8081
-
-spring.datasource.url=jdbc:postgresql://localhost:5432/playground
-spring.datasource.username=postgres
-spring.datasource.password=admin
-
-spring.jpa.hibernate.ddl-auto=create
-spring.jpa.show-sql=true
-
-spring.sql.init.mode=never
-
 jwt.secret=CAMBIAR_POR_CLAVE_DE_256_BITS
 
 
