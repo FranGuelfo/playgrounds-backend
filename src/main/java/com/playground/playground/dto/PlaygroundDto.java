@@ -1,24 +1,24 @@
 package com.playground.playground.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlaygroundDto {
 
-    private Long id;
+    private String id;
     private String name;
     private String address;
     private Double latitude;
     private Double longitude;
     private String description;
-
-    // En el DTO solo mantenemos las URLs
-    private List<String> photos = new ArrayList<>();
-
     private Double valorationMedia;
-    private LocalDateTime createdAt;
+    private List<String> photos = new ArrayList<>();
 }

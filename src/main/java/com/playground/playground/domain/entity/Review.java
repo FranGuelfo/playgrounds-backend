@@ -1,30 +1,27 @@
 package com.playground.playground.domain.entity;
 
 import com.playground.playground.security.user.UserSecurity;
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
-@Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "reviews")
 public class Review {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
-    private int score;
-
+    private Integer score;
     private String comment;
-
     private LocalDateTime date;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "playground_id")
-    private Playground playground;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
-    private UserSecurity user;
+    private String playgroundId;
+    private String userId;
 }

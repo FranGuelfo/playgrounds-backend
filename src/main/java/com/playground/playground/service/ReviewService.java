@@ -6,11 +6,11 @@ import java.util.List;
 
 public interface ReviewService {
 
-    List<ReviewDto> listPlaygroundReviews(Long playgroundId);
+    List<ReviewDto> listPlaygroundReviews(String playgroundId);
 
     ReviewDto createReview(ReviewDto reviewDto);
 
-    void deleteReview(Long id);
+    void deleteReview(String id);
 
-    ReviewDto updateReview(Long id, ReviewDto reviewDto);
+    ReviewDto updateReview(String id, ReviewDto reviewDto);
 }

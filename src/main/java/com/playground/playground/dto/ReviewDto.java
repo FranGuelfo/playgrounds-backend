@@ -1,19 +1,23 @@
 package com.playground.playground.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReviewDto {
 
-    private Long id;
+    private String id;
     private int score;
     private String comment;
     private LocalDateTime date;
 
-    private Long playgroundId;
+    private String playgroundId;
 
-    private String username;
+    private String userId;
 }
 

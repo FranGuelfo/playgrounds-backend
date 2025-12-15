@@ -16,7 +16,7 @@ public class ReviewController {
     private final ReviewService reviewService;
 
     @GetMapping("/playground/{playgroundId}")
-    public List<ReviewDto> getReviewsByPlayground(@PathVariable Long playgroundId) {
+    public List<ReviewDto> getReviewsByPlayground(@PathVariable String playgroundId) {
         return reviewService.listPlaygroundReviews(playgroundId);
     }
 
@@ -26,12 +26,12 @@ public class ReviewController {
     }
 
     @PutMapping("/{id}")
-    public ReviewDto updateReview(@PathVariable Long id, @RequestBody ReviewDto reviewDto){
+    public ReviewDto updateReview(@PathVariable String id, @RequestBody ReviewDto reviewDto){
         return reviewService.updateReview(id, reviewDto);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteReview(@PathVariable Long id) {
+    public void deleteReview(@PathVariable String id) {
         reviewService.deleteReview(id);
     }
 }

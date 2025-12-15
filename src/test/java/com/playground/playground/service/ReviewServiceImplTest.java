@@ -34,13 +34,13 @@ class ReviewServiceImplTest {
         // given
         Review review = new Review();
         UserSecurity author = new UserSecurity();
-        author.setId(1L);
-        review.setUser(author);
+        author.setId("1");
+        review.setUserId("1");
 
-        when(reviewRepository.findById(10L)).thenReturn(Optional.of(review));
+        when(reviewRepository.findById("1")).thenReturn(Optional.of(review));
 
         // when / then
         assertThrows(ForbiddenException.class,
-                () -> reviewService.deleteReview(10L));
+                () -> reviewService.deleteReview("1"));
     }
 }

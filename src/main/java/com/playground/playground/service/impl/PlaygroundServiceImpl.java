@@ -30,7 +30,6 @@ public class PlaygroundServiceImpl implements PlaygroundService {
                 .map(url -> {
                     PlaygroundPhoto photo = new PlaygroundPhoto();
                     photo.setUrl(url);
-                    photo.setPlayground(playground);
                     return photo;
                 })
                 .toList();
@@ -42,7 +41,7 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Override
-    public PlaygroundDto updatePlayground(Long id, PlaygroundDto dto) {
+    public PlaygroundDto updatePlayground(String id, PlaygroundDto dto) {
         Playground playground = repository.findById(id)
                 .orElseThrow(PlaygroundNotFoundException::new);
 
@@ -52,25 +51,22 @@ public class PlaygroundServiceImpl implements PlaygroundService {
         playground.setLongitude(dto.getLongitude());
         playground.setDescription(dto.getDescription());
 
-        playground.getPhotos().clear();
-
         List<PlaygroundPhoto> photos = dto.getPhotos().stream()
                 .map(url -> {
                     PlaygroundPhoto photo = new PlaygroundPhoto();
                     photo.setUrl(url);
-                    photo.setPlayground(playground);
                     return photo;
                 })
                 .toList();
 
-        playground.getPhotos().addAll(photos);
+        playground.setPhotos(photos);
 
         Playground saved = repository.save(playground);
         return toDtoWithPhotos(saved);
     }
 
     @Override
-    public PlaygroundDto getPlaygrounds(Long id) {
+    public PlaygroundDto getPlaygrounds(String id) {
         Playground playground = repository.findById(id)
                 .orElseThrow(PlaygroundNotFoundException::new);
         return toDtoWithPhotos(playground);
@@ -85,18 +81,17 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Override
-    public void deletePlayground(Long id) {
+    public void deletePlayground(String id) {
         repository.deleteById(id);
     }
 
     @Override
-    public PlaygroundDto addPhoto(Long playgroundId, String photoUrl) {
+    public PlaygroundDto addPhoto(String playgroundId, String photoUrl) {
         Playground playground = repository.findById(playgroundId)
                 .orElseThrow(PlaygroundNotFoundException::new);
 
         PlaygroundPhoto photo = new PlaygroundPhoto();
         photo.setUrl(photoUrl);
-        photo.setPlayground(playground);
 
         playground.getPhotos().add(photo);
 
@@ -104,7 +99,7 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Override
-    public PlaygroundDto removePhoto(Long playgroundId, String photoUrl) {
+    public PlaygroundDto removePhoto(String playgroundId, String photoUrl) {
         Playground playground = repository.findById(playgroundId)
                 .orElseThrow(PlaygroundNotFoundException::new);
 

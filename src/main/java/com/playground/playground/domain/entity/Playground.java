@@ -1,25 +1,30 @@
 package com.playground.playground.domain.entity;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Document(collection = "playgrounds")
 public class Playground {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+
+    @Id
+    private String id;
+
     private String name;
     private String address;
     private Double latitude;
     private Double longitude;
     private String description;
-    private Double valorationMedia;
-    private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "playground", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Double valorationMedia = 0.0;
+    private LocalDateTime createdAt = LocalDateTime.now();
     private List<PlaygroundPhoto> photos = new ArrayList<>();
 }
