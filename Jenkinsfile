@@ -2,45 +2,44 @@ pipeline {
     agent any
 
     tools {
-        jdk 'java-17'
-        maven 'maven-3'
+        jdk '17'
+        maven 'Maven'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
-                echo 'Clonando repositorio...'
                 checkout scm
             }
         }
 
         stage('Build') {
             steps {
-                echo 'Compilando proyecto...'
                 sh 'mvn clean compile'
             }
         }
 
         stage('Test') {
             steps {
-                echo 'Ejecutando tests...'
                 sh 'mvn test'
             }
         }
 
+        stage('Package') {
+            steps {
+                sh 'mvn package -DskipTests'
+            }
+        }
     }
 
     post {
         success {
-            echo '✅ Build y tests OK'
+            echo '✅ Build OK'
         }
         failure {
-            echo '❌ Build o tests fallaron'
-        }
-        always {
-            junit '**/target/surefire-reports/*.xml'
+            echo '❌ Build FAILED'
         }
     }
 }
+
 
