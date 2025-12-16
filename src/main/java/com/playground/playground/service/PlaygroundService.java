@@ -9,15 +9,15 @@ public interface PlaygroundService {
 
     List<PlaygroundDto> listPlayground();
 
-    PlaygroundDto getPlaygrounds(Long id);
+    PlaygroundDto getPlaygrounds(String id);
 
     PlaygroundDto createPlayground(PlaygroundDto playground);
 
-    PlaygroundDto updatePlayground(Long id, PlaygroundDto playground);
+    PlaygroundDto updatePlayground(String id, PlaygroundDto playground);
 
-    void deletePlayground(Long id);
+    void deletePlayground(String id);
 
-    PlaygroundDto addPhoto(Long playgroundId, String photoUrl);
+    PlaygroundDto addPhoto(String playgroundId, String photoUrl);
 
-    PlaygroundDto removePhoto(Long playgroundId, String photoUrl);
+    PlaygroundDto removePhoto(String playgroundId, String photoUrl);
 }

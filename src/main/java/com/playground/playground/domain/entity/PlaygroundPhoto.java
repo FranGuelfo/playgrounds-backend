@@ -1,18 +1,15 @@
 package com.playground.playground.domain.entity;
 
-import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Entity
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class PlaygroundPhoto {
-
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
     private String url;
-
-    @ManyToOne
-    @JoinColumn(name = "playground_id")
-    private Playground playground;
 }
 
