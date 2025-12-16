@@ -1,9 +1,10 @@
 package com.playground.playground.service.impl;
 
 import com.playground.playground.dto.PlaygroundDto;
+import com.playground.playground.exception.PlaygroundNotFoundException;
 import com.playground.playground.mapper.PlaygroundMapper;
-import com.playground.playground.model.entity.Playground;
-import com.playground.playground.model.entity.PlaygroundPhoto;
+import com.playground.playground.domain.entity.Playground;
+import com.playground.playground.domain.entity.PlaygroundPhoto;
 import com.playground.playground.repository.PlaygroundRepository;
 import com.playground.playground.service.PlaygroundService;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +26,14 @@ public class PlaygroundServiceImpl implements PlaygroundService {
         playground.setValorationMedia(0.0);
         playground.setCreatedAt(LocalDateTime.now());
 
-        // Mapear manualmente fotos
-        List<PlaygroundPhoto> photos = dto.getPhotos().stream().map(url -> {
-            PlaygroundPhoto photo = new PlaygroundPhoto();
-            photo.setUrl(url);
-            photo.setPlayground(playground);
-            return photo;
-        }).toList();
+        List<PlaygroundPhoto> photos = dto.getPhotos().stream()
+                .map(url -> {
+                    PlaygroundPhoto photo = new PlaygroundPhoto();
+                    photo.setUrl(url);
+                    return photo;
+                })
+                .toList();
+
         playground.setPhotos(photos);
 
         Playground saved = repository.save(playground);
@@ -39,9 +41,9 @@ public class PlaygroundServiceImpl implements PlaygroundService {
     }
 
     @Override
-    public PlaygroundDto updatePlayground(Long id, PlaygroundDto dto) {
+    public PlaygroundDto updatePlayground(String id, PlaygroundDto dto) {
         Playground playground = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Playground not found"));
+                .orElseThrow(PlaygroundNotFoundException::new);
 
         playground.setName(dto.getName());
         playground.setAddress(dto.getAddress());
@@ -49,36 +51,61 @@ public class PlaygroundServiceImpl implements PlaygroundService {
         playground.setLongitude(dto.getLongitude());
         playground.setDescription(dto.getDescription());
 
-        // Limpiar fotos antiguas y agregar nuevas
-        playground.getPhotos().clear();
-        List<PlaygroundPhoto> photos = dto.getPhotos().stream().map(url -> {
-            PlaygroundPhoto photo = new PlaygroundPhoto();
-            photo.setUrl(url);
-            photo.setPlayground(playground);
-            return photo;
-        }).toList();
-        playground.getPhotos().addAll(photos);
+        List<PlaygroundPhoto> photos = dto.getPhotos().stream()
+                .map(url -> {
+                    PlaygroundPhoto photo = new PlaygroundPhoto();
+                    photo.setUrl(url);
+                    return photo;
+                })
+                .toList();
+
+        playground.setPhotos(photos);
 
         Playground saved = repository.save(playground);
         return toDtoWithPhotos(saved);
     }
 
     @Override
-    public PlaygroundDto getPlaygrounds(Long id) {
+    public PlaygroundDto getPlaygrounds(String id) {
         Playground playground = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Playground not found"));
+                .orElseThrow(PlaygroundNotFoundException::new);
         return toDtoWithPhotos(playground);
     }
 
     @Override
     public List<PlaygroundDto> listPlayground() {
-        List<Playground> playgrounds = repository.findAll();
-        return playgrounds.stream().map(this::toDtoWithPhotos).toList();
+        return repository.findAll()
+                .stream()
+                .map(this::toDtoWithPhotos)
+                .toList();
     }
 
     @Override
-    public void deletePlayground(Long id) {
+    public void deletePlayground(String id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public PlaygroundDto addPhoto(String playgroundId, String photoUrl) {
+        Playground playground = repository.findById(playgroundId)
+                .orElseThrow(PlaygroundNotFoundException::new);
+
+        PlaygroundPhoto photo = new PlaygroundPhoto();
+        photo.setUrl(photoUrl);
+
+        playground.getPhotos().add(photo);
+
+        return toDtoWithPhotos(repository.save(playground));
+    }
+
+    @Override
+    public PlaygroundDto removePhoto(String playgroundId, String photoUrl) {
+        Playground playground = repository.findById(playgroundId)
+                .orElseThrow(PlaygroundNotFoundException::new);
+
+        playground.getPhotos().removeIf(photo -> photo.getUrl().equals(photoUrl));
+
+        return toDtoWithPhotos(repository.save(playground));
     }
 
     private PlaygroundDto toDtoWithPhotos(Playground playground) {
@@ -86,35 +113,8 @@ public class PlaygroundServiceImpl implements PlaygroundService {
         dto.setPhotos(
                 playground.getPhotos().stream()
                         .map(PlaygroundPhoto::getUrl)
-                        .toList());
+                        .toList()
+        );
         return dto;
-    }
-
-    @Override
-    public PlaygroundDto addPhoto(Long playgroundId, String photoUrl) {
-        Playground playground = repository.findById(playgroundId)
-                .orElseThrow(() -> new RuntimeException("Playground not found"));
-
-        PlaygroundPhoto photo = new PlaygroundPhoto();
-        photo.setUrl(photoUrl);
-        photo.setPlayground(playground);
-
-        playground.getPhotos().add(photo);
-
-        Playground saved = repository.save(playground);
-
-        return toDtoWithPhotos(saved);
-    }
-
-    @Override
-    public PlaygroundDto removePhoto(Long playgroundId, String photoUrl) {
-        Playground playground = repository.findById(playgroundId)
-                .orElseThrow(() -> new RuntimeException("Playground not found"));
-
-        playground.getPhotos().removeIf(photo -> photo.getUrl().equals(photoUrl));
-
-        Playground saved = repository.save(playground);
-
-        return toDtoWithPhotos(saved);
     }
 }

@@ -1,23 +1,27 @@
-package com.playground.playground.dto;
+package com.playground.playground.domain.entity;
 
+import com.playground.playground.security.user.UserSecurity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReviewDto {
+@Document(collection = "reviews")
+public class Review {
 
+    @Id
     private String id;
-    private int score;
+
+    private Integer score;
     private String comment;
     private LocalDateTime date;
 
     private String playgroundId;
-
     private String userId;
 }
-

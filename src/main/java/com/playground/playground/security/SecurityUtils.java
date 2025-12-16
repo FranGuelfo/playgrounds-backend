@@ -1,7 +1,7 @@
-package com.playground.playground.config.security;
+package com.playground.playground.security;
 
 import com.playground.playground.exception.ForbiddenException;
-import com.playground.playground.model.security.UserSecurity;
+import com.playground.playground.security.user.UserSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 public class SecurityUtils {

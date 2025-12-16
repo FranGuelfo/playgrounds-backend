@@ -1,4 +1,4 @@
-package com.playground.playground.service.security;
+package com.playground.playground.security.jwt;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

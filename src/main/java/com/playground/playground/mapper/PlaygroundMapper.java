@@ -1,7 +1,7 @@
 package com.playground.playground.mapper;
 
 import com.playground.playground.dto.PlaygroundDto;
-import com.playground.playground.model.entity.Playground;
+import com.playground.playground.domain.entity.Playground;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
