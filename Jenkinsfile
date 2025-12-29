@@ -20,14 +20,10 @@ pipeline {
         }
 
         stage('SonarQube') {
-            environment {
-                SONAR_TOKEN = credentials('sonar-token')
-            }
             steps {
-                sh '''
-                mvn sonar:sonar \
-                  -Dsonar.login=$SONAR_TOKEN
-                '''
+                withSonarQubeEnv('SonarQube') {
+                    sh 'mvn sonar:sonar'
+                }
             }
         }
     }
