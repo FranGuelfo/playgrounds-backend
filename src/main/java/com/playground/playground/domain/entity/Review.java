@@ -1,6 +1,5 @@
 package com.playground.playground.domain.entity;
 
-import com.playground.playground.security.user.UserSecurity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
