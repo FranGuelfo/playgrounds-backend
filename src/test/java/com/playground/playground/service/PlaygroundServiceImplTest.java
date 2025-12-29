@@ -1,7 +1,9 @@
 package com.playground.playground.service;
 
 import com.playground.playground.domain.entity.Playground;
+import com.playground.playground.dto.CreatePlaygroundDto;
 import com.playground.playground.dto.PlaygroundDto;
+import com.playground.playground.dto.UpdatePlaygroundDto;
 import com.playground.playground.exception.PlaygroundNotFoundException;
 import com.playground.playground.mapper.PlaygroundMapper;
 import com.playground.playground.repository.PlaygroundRepository;
@@ -36,7 +38,7 @@ class PlaygroundServiceImplTest {
     @Test
     void createPlayground_shouldCreatePlaygroundWithDefaultValues() {
         // given
-        PlaygroundDto dto = new PlaygroundDto();
+        CreatePlaygroundDto  dto = new CreatePlaygroundDto ();
         dto.setName("Test Playground");
         dto.setPhotos(List.of("url1", "url2"));
 
@@ -69,7 +71,7 @@ class PlaygroundServiceImplTest {
         // then
         assertThrows(
                 PlaygroundNotFoundException.class,
-                () -> playgroundService.updatePlayground("1", new PlaygroundDto())
+                () -> playgroundService.updatePlayground("1", new UpdatePlaygroundDto())
         );
     }
 }
