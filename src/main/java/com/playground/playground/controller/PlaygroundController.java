@@ -1,6 +1,8 @@
 package com.playground.playground.controller;
 
+import com.playground.playground.dto.CreatePlaygroundDto;
 import com.playground.playground.dto.PlaygroundDto;
+import com.playground.playground.dto.UpdatePlaygroundDto;
 import com.playground.playground.service.PlaygroundService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -25,12 +27,12 @@ public class PlaygroundController {
     }
 
     @PostMapping
-    public PlaygroundDto createPlayground(@RequestBody PlaygroundDto playground){
+    public PlaygroundDto createPlayground(@RequestBody CreatePlaygroundDto  playground){
         return service.createPlayground(playground);
     }
 
     @PutMapping("/{id}")
-    public PlaygroundDto updatePlayground(@PathVariable String id, @RequestBody PlaygroundDto playground){
+    public PlaygroundDto updatePlayground(@PathVariable String id, @RequestBody UpdatePlaygroundDto playground){
         return service.updatePlayground(id, playground);
     }
 

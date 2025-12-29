@@ -1,7 +1,9 @@
 package com.playground.playground.service;
 
 
+import com.playground.playground.dto.CreatePlaygroundDto;
 import com.playground.playground.dto.PlaygroundDto;
+import com.playground.playground.dto.UpdatePlaygroundDto;
 
 import java.util.List;
 
@@ -11,9 +13,9 @@ public interface PlaygroundService {
 
     PlaygroundDto getPlaygrounds(String id);
 
-    PlaygroundDto createPlayground(PlaygroundDto playground);
+    PlaygroundDto createPlayground(CreatePlaygroundDto  playground);
 
-    PlaygroundDto updatePlayground(String id, PlaygroundDto playground);
+    PlaygroundDto updatePlayground(String id, UpdatePlaygroundDto playground);
 
     void deletePlayground(String id);
 
