@@ -1,6 +1,7 @@
 package com.playground.playground.service;
 
 import com.playground.playground.domain.entity.Playground;
+import com.playground.playground.domain.entity.PlaygroundPhoto;
 import com.playground.playground.dto.CreatePlaygroundDto;
 import com.playground.playground.dto.PlaygroundDto;
 import com.playground.playground.dto.UpdatePlaygroundDto;
@@ -17,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -38,17 +40,31 @@ class PlaygroundServiceImplTest {
     @Test
     void createPlayground_shouldCreatePlaygroundWithDefaultValues() {
         // given
-        CreatePlaygroundDto  dto = new CreatePlaygroundDto ();
+        CreatePlaygroundDto dto = new CreatePlaygroundDto();
         dto.setName("Test Playground");
         dto.setPhotos(List.of("url1", "url2"));
 
         Playground playground = new Playground();
-        playground.setPhotos(new ArrayList<>());
+        playground.setPhotos(dto.getPhotos().stream()
+                .map(PlaygroundPhoto::new)
+                .toList());
 
+        // Mock del mapper para convertir DTO a entidad
         when(playgroundMapper.toEntity(dto)).thenReturn(playground);
-        when(playgroundMapper.toDto(any(Playground.class)))
-                .thenReturn(new PlaygroundDto());
 
+        // Mock del mapper para convertir entidad a DTO, copiando fotos
+        when(playgroundMapper.toDto(any(Playground.class)))
+                .thenAnswer(invocation -> {
+                    Playground p = invocation.getArgument(0);
+                    PlaygroundDto dtoResult = new PlaygroundDto();
+                    // Copiamos las URLs de las fotos de la entidad
+                    dtoResult.setPhotos(p.getPhotos().stream()
+                            .map(PlaygroundPhoto::getUrl)
+                            .toList());
+                    return dtoResult;
+                });
+
+        // Mock del repositorio para guardar la entidad
         when(playgroundRepository.save(any()))
                 .thenAnswer(invocation -> invocation.getArgument(0));
 
@@ -62,7 +78,6 @@ class PlaygroundServiceImplTest {
         verify(playgroundRepository).save(any(Playground.class));
     }
 
-
     @Test
     void updatePlayground_shouldThrowException_whenNotFound() {
         // given
@@ -75,4 +90,3 @@ class PlaygroundServiceImplTest {
         );
     }
 }
-
