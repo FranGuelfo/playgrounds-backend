@@ -1,6 +1,8 @@
 package com.playground.playground.controller;
 
+import com.playground.playground.dto.CreatePlaygroundDto;
 import com.playground.playground.dto.PlaygroundDto;
+import com.playground.playground.dto.UpdatePlaygroundDto;
 import com.playground.playground.service.PlaygroundService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -26,45 +28,83 @@ class PlaygroundControllerTest {
 
     @Test
     void testListPlaygrounds() {
-        when(service.listPlayground()).thenReturn(List.of(new PlaygroundDto("id", "name", "address",
-                (double) 0, (double) 0, "description", (double) 0, List.of("photos"))));
+        PlaygroundDto dto = PlaygroundDto.builder()
+                .id("id")
+                .name("name")
+                .address("address")
+                .latitude(0.0)
+                .longitude(0.0)
+                .description("description")
+                .valorationMedia(0.0)
+                .photos(List.of("photos"))
+                .build();
+
+        when(service.listPlayground()).thenReturn(List.of(dto));
 
         List<PlaygroundDto> result = playgroundController.listPlaygrounds();
-        Assertions.assertEquals(List.of(new PlaygroundDto("id", "name", "address", Double.valueOf(0),
-                (double) 0, "description", (double) 0, List.of("photos"))), result);
+
+        Assertions.assertEquals(List.of(dto), result);
     }
 
     @Test
     void testGetPlayground() {
-        when(service.getPlaygrounds(anyString())).thenReturn(new PlaygroundDto("id", "name", "address",
-                Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of("photos")));
+        PlaygroundDto dto = PlaygroundDto.builder()
+                .id("id")
+                .name("name")
+                .address("address")
+                .latitude(0.0)
+                .longitude(0.0)
+                .description("description")
+                .valorationMedia(0.0)
+                .photos(List.of("photos"))
+                .build();
+
+        when(service.getPlaygrounds("id")).thenReturn(dto);
 
         PlaygroundDto result = playgroundController.getPlayground("id");
-        Assertions.assertEquals(new PlaygroundDto("id", "name", "address", Double.valueOf(0), Double.valueOf(0),
-                "description", Double.valueOf(0), List.of("photos")), result);
+
+        Assertions.assertEquals(dto, result);
     }
 
     @Test
     void testCreatePlayground() {
-        when(service.createPlayground(any(PlaygroundDto.class))).thenReturn(new PlaygroundDto("id", "name", "address"
-                , Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of("photos")));
 
-        PlaygroundDto result = playgroundController.createPlayground(new PlaygroundDto("id", "name", "address",
-                Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of("photos")));
-        Assertions.assertEquals(new PlaygroundDto("id", "name", "address", Double.valueOf(0), Double.valueOf(0),
-                "description", Double.valueOf(0), List.of("photos")), result);
+        PlaygroundDto dto = playgroundDto();
+        CreatePlaygroundDto createDto = CreatePlaygroundDto.builder()
+                .name("name")
+                .address("address")
+                .latitude(0.0)
+                .longitude(0.0)
+                .description("description")
+                .photos(List.of("photos"))
+                .build();
+
+        when(service.createPlayground(any(CreatePlaygroundDto.class))).thenReturn(dto);
+
+        PlaygroundDto result = playgroundController.createPlayground(createDto);
+
+        Assertions.assertEquals(dto, result);
     }
 
     @Test
     void testUpdatePlayground() {
-        when(service.updatePlayground(anyString(), any(PlaygroundDto.class))).thenReturn(new PlaygroundDto("id",
-                "name", "address", Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of(
-                        "photos")));
 
-        PlaygroundDto result = playgroundController.updatePlayground("id", new PlaygroundDto("id", "name", "address",
-                Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of("photos")));
-        Assertions.assertEquals(new PlaygroundDto("id", "name", "address", Double.valueOf(0), Double.valueOf(0),
-                "description", Double.valueOf(0), List.of("photos")), result);
+        PlaygroundDto dto = playgroundDto();
+        UpdatePlaygroundDto updateDto = UpdatePlaygroundDto.builder()
+                .name("name")
+                .address("address")
+                .latitude(0.0)
+                .longitude(0.0)
+                .description("description")
+                .photos(List.of("photos"))
+                .build();
+
+        when(service.updatePlayground(eq("id"), any(UpdatePlaygroundDto.class)))
+                .thenReturn(dto);
+
+        PlaygroundDto result = playgroundController.updatePlayground("id", updateDto);
+
+        Assertions.assertEquals(dto, result);
     }
 
     @Test
@@ -75,23 +115,36 @@ class PlaygroundControllerTest {
 
     @Test
     void testAddPhoto() {
-        when(service.addPhoto(anyString(), anyString())).thenReturn(new PlaygroundDto("id", "name", "address",
-                Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of("photos")));
+        PlaygroundDto dto = playgroundDto();
+
+        when(service.addPhoto("id", "photoUrl")).thenReturn(dto);
 
         PlaygroundDto result = playgroundController.addPhoto("id", "photoUrl");
-        Assertions.assertEquals(new PlaygroundDto("id", "name", "address", Double.valueOf(0), Double.valueOf(0),
-                "description", Double.valueOf(0), List.of("photos")), result);
+
+        Assertions.assertEquals(dto, result);
     }
 
     @Test
     void testDeletePhoto() {
-        when(service.removePhoto(anyString(), anyString())).thenReturn(new PlaygroundDto("id", "name", "address",
-                Double.valueOf(0), Double.valueOf(0), "description", Double.valueOf(0), List.of("photos")));
+        PlaygroundDto dto = playgroundDto();
+
+        when(service.removePhoto("id", "photoUrl")).thenReturn(dto);
 
         PlaygroundDto result = playgroundController.deletePhoto("id", "photoUrl");
-        Assertions.assertEquals(new PlaygroundDto("id", "name", "address", Double.valueOf(0), Double.valueOf(0),
-                "description", Double.valueOf(0), List.of("photos")), result);
+
+        Assertions.assertEquals(dto, result);
+    }
+
+    private PlaygroundDto playgroundDto() {
+        return PlaygroundDto.builder()
+                .id("id")
+                .name("name")
+                .address("address")
+                .latitude(0.0)
+                .longitude(0.0)
+                .description("description")
+                .valorationMedia(0.0)
+                .photos(List.of("photos"))
+                .build();
     }
 }
-
-//Generated with love by TestMe :) Please raise issues & feature requests at: https://weirddev.com/forum#!/testme

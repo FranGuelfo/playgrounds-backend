@@ -1,35 +1,45 @@
 package com.playground.playground.exception;
 
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice
+import java.time.Instant;
+
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ForbiddenException.class)
-    public ResponseEntity<ApiError> handleForbidden(ForbiddenException ex, HttpServletRequest request) {
-        ApiError error = ApiError.of(HttpStatus.FORBIDDEN, ex.getMessage(), request.getRequestURI());
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new ApiError(
+                        ex.getMessage(),
+                        HttpStatus.NOT_FOUND.value(),
+                        Instant.now()
+                ));
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ApiError> handleRuntime(RuntimeException ex, HttpServletRequest request) {
-        ApiError error = ApiError.of(HttpStatus.BAD_REQUEST, ex.getMessage(), request.getRequestURI());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ApiError> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ApiError(
+                        ex.getMessage(),
+                        HttpStatus.BAD_REQUEST.value(),
+                        Instant.now()
+                ));
     }
 
-    @ExceptionHandler(org.springframework.security.access.AccessDeniedException.class)
-    public ResponseEntity<ApiError> handleAccessDenied(Exception ex, HttpServletRequest request) {
-        ApiError error = ApiError.of(HttpStatus.FORBIDDEN, "You don't have permission to access this resource", request.getRequestURI());
-        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
-    }
-
-    @ExceptionHandler(org.springframework.security.authentication.BadCredentialsException.class)
-    public ResponseEntity<ApiError> handleBadCredentials(Exception ex, HttpServletRequest request) {
-        ApiError error = ApiError.of(HttpStatus.UNAUTHORIZED, "Invalid username or password", request.getRequestURI());
-        return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGeneric(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ApiError(
+                        "Unexpected error",
+                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                        Instant.now()
+                ));
     }
 }

@@ -1,4 +1,4 @@
-package com.playground.playground.dto.security;
+package com.playground.playground.auth;
 
 import lombok.Data;
 

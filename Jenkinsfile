@@ -8,25 +8,39 @@ pipeline {
 
     stages {
         stage('Checkout') {
-            steps { checkout scm }
-        }
-
-        stage('Build') {
-            steps { sh 'mvn clean compile' }
-        }
-
-        stage('Test') {
-            steps { sh 'mvn test' }
-        }
-
-        stage('Package') {
-            steps { sh 'mvn package -DskipTests' }
-        }
-
-        stage('Docker Build') {
             steps {
-                sh 'docker build -t playgrounds-backend:latest .'
+                checkout scm
             }
+        }
+
+        stage('Build + Test + Coverage') {
+            steps {
+                sh 'mvn clean verify'
+            }
+        }
+
+        stage('SonarQube') {
+            environment {
+                SONAR_TOKEN = credentials('sonar-token')
+            }
+            steps {
+                sh '''
+                mvn sonar:sonar \
+                  -Dsonar.login=$SONAR_TOKEN
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished'
+        }
+        success {
+            echo '✅ Build, tests and Sonar completed successfully'
+        }
+        failure {
+            echo '❌ Pipeline failed'
         }
     }
 }
