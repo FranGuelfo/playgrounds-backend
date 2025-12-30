@@ -31,15 +31,4 @@ public class GlobalExceptionHandler {
                         Instant.now()
                 ));
     }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGeneric(Exception ex) {
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ApiError(
-                        "Unexpected error",
-                        HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                        Instant.now()
-                ));
-    }
 }
