@@ -80,11 +80,12 @@ class PlaygroundServiceImplTest {
     void updatePlayground_shouldThrowException_whenNotFound() {
         // given
         when(playgroundRepository.findById("1")).thenReturn(Optional.empty());
+        UpdatePlaygroundDto dto = new UpdatePlaygroundDto();
 
         // then
         assertThrows(
                 PlaygroundNotFoundException.class,
-                () -> playgroundService.updatePlayground("1", new UpdatePlaygroundDto())
+                () -> playgroundService.updatePlayground("1", dto)
         );
     }
 }
